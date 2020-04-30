@@ -13,13 +13,13 @@ The Critic (Value-based) model computes the Q-values for any given (state, actio
 The code was modified from the "DDPG pendulum" tutorial from a the Udacity Deep Reinforcement Learning Repo.
 
 The modifications are as follows:
-- model.py: This file implements the Q-Network with both the standard feed forward architecture.
-  - To have a stable and faster convergence, we added a batchnorm layer after the input layer
+- model.py: This file implements the Q-Network with the standard feed forward architecture.
+  - Both critic and actor are 3-layered feed forward networks with ReLU activations.
+  - To have more stable and faster convergence, we added a batchnorm layer after the input layer
   
 - agent.py: This file implements the learning agent itself along with the replay buffer and exploration noise.
-  - The first modification was to set a decaying factor for the noise, so the agent can do some exploration before exploitation.
-  - The second one was to introduce a defined interval for the learning procedure.
-  - Finally, the agent was modified to run simultaneously on multiple environments by having a shared buffer replay from which all agents can read and write.
+  - The first modification was to introduce a defined interval for the learning procedure.
+  - Second, the agent was modified to run simultaneously on multiple environments by having a shared buffer replay from which all agents can read and write.
 
 The rest of the code remains nearly unchanged.
 
@@ -30,23 +30,19 @@ The DDPG agent uses the following parameters values (defined in ddpg_agent.py)
 ```
 BUFFER_SIZE = int(1e6)  # replay buffer size
 BATCH_SIZE = 128        # minibatch size
-GAMMA = 0.99            # discount factor
+GAMMA = 0.95            # discount factor
 TAU = 1e-3              # for soft update of target parameters
-LR_ACTOR = 1e-3         # learning rate of the actor
+LR_ACTOR = 1e-4         # learning rate of the actor 
 LR_CRITIC = 1e-3        # learning rate of the critic
 WEIGHT_DECAY = 0        # L2 weight decay
-LEARN_EVERY = 20        # learning timestep interval
-LEARN_NUM = 10          # number of learning passes
-OU_SIGMA = 0.2          # Ornstein-Uhlenbeck noise parameter
-OU_THETA = 0.15         # Ornstein-Uhlenbeck noise parameter
-EPSILON = 1.0           # explore->exploit noise process added to act step
-EPSILON_DECAY = 1e-6    # decay rate for noise process
+TRAIN_EVERY = 20        # How many iterations to wait before updating target networks
+NUM_AGENTS = 20         # How many agents are there in the environment
 ```
 
-[DDPG Score](scores.jpg)
+![DDPG Score](scores.png)
 
-The agent is able to obtain +30.0 average reward for 100 episode in XXX episodes.
+The 20 agents were able to obtain +30.0 average reward for 100 episode in 124 episodes.
 
 ### Future work
-- Investigate other Actor-Critic methods.
-- Implement D4PG.
+- Investigate other Actor-Critic methods such as PPO or A3C.
+- Implement D4PG (the distributed version of DDPG).
